@@ -20,3 +20,12 @@ app.use(bodyParser.urlencoded({
 app.get('/', (req, res)=> {
   res.send('root route loaded');
 })
+
+const todoRoutes = require('./routes/todo-routes');
+app.use('/lists', todoRoutes);
+
+app.get('*', (req, res) => {
+  res.status(404).json({
+    message: 'Invalid route!',
+  });
+});
