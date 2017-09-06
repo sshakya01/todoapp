@@ -3,10 +3,11 @@ const todoController = {};
 
 todoController.index = (req, res) => {
   Todo.findAll()
-  .then(todo=> {
-    res.json({
-      message: 'ok',
-      data: todo,
+  .then(todos=> {
+    //res.json({
+    res.render('todos/index1',{
+      message:'ok',
+      data: todos,
     });
   }).catch(err => {
     console.log(err);
@@ -15,12 +16,12 @@ todoController.index = (req, res) => {
 }
 
 todoController.show = function(req, res){
-  Todo.findOne(req.params.id)
-  .then(todo=>{
-    res.json({
-      message:'ok',
-      data: list,
-    })
+  Todo.findById(req.params.id)
+  .then(todos =>{
+      res.render('todos/single',{
+         message:'ok',
+         data: todo,
+      });
   }).catch(err => {
     console.log(err);
     res.status(500).json(err);
@@ -34,15 +35,24 @@ todoController.create = function(req, res){
     category: req.body.category
   })
   .then(list=> {
-    res.json({
-      message:'ok',
-      data:list,
-    })
+    res.redirect('/lists');
   }).catch(err => {
     console.log(err);
     res.status(500).json(err);
   })
 }
+todoController.update = (req, res) => {
+   Todo.update({
+     title: req.body.title,
+     status: req.body.status,
+     category: req.body.category,
+   }, req.params.id).then(todo => {
+     res.redirect('/lists');
+   }).catch(err => {
+     console.log(err);
+     res.status(500).json(err);
+   })
+};
 
 todoController.delete = function(req, res){
   Todo.destroy(req.params.id)
